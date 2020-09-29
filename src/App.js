@@ -1,19 +1,25 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { withAuthenticator, AmplifySignOut } from '@aws-amplify/ui-react';
-import { Auth } from '@aws-amplify/auth';
+import React, { Component } from "react";
+import logo from "./logo.svg";
+import "./App.css";
+import { withAuthenticator, AmplifySignOut } from "@aws-amplify/ui-react";
+import { Auth } from "@aws-amplify/auth";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
     super(props);
 
-    this.state = { user: '' };
+    this.state = { user: "" };
   }
 
   async componentDidMount() {
     const userInfo = await Auth.currentUserInfo();
-    this.setState({ user: userInfo.username });
+    const answer = await axios.get(
+      `http://awscdci3-env.eba-hf4peyrq.eu-central-1.elasticbeanstalk.com/hello?name=${userInfo.username}`
+    );
+    console.log(answer);
+
+    this.setState({ user: answer.data });
   }
 
   render() {
